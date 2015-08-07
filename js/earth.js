@@ -27,16 +27,21 @@
   // Lighting
 	scene.add(new THREE.AmbientLight(0xffffff));
 
-/*
-	var light = new THREE.DirectionalLight(0xffffff, 1);
-	light.position.set(5,3,5);
-	scene.add(light);
-*/
+  // Earth
+  var earth = createSphere(radius, segments);
+	earth.rotation.y = rotation;
+  scene.add(earth);
 
-  var sphere = createSphere(radius, segments);
-	sphere.rotation.y = rotation; 
-	scene.add(sphere)
-
+  // uStudio Moon
+  var moon = new THREE.Mesh(
+    new THREE.SphereGeometry(0.1, segments, segments),
+		new THREE.MeshPhongMaterial({
+        map: THREE.ImageUtils.loadTexture('images/ustudio.jpg')
+		})
+	);
+  moon.position.x = 1.5;
+  moon.position.y = 1.5;
+  scene.add(moon);
 
 	var stars = createStars(90, 64);
 	scene.add(stars);
@@ -49,7 +54,8 @@
 
 	function render() {
 		controls.update();
-		sphere.rotation.y += 0.0005;
+		earth.rotation.y += 0.0005;
+		moon.rotation.y -= 0.01;
 		requestAnimationFrame(render);
 		renderer.render(scene, camera);
 	}
@@ -62,16 +68,16 @@
 				bumpMap:     THREE.ImageUtils.loadTexture('images/elev_bump_4k.jpg'),
 				bumpScale:   0.005,
 				specularMap: THREE.ImageUtils.loadTexture('images/water_4k.png'),
-				specular:    new THREE.Color('grey')								
+				specular:    new THREE.Color('grey')
 			})
 		);
 	}
 
 	function createStars(radius, segments) {
 		return new THREE.Mesh(
-			new THREE.SphereGeometry(radius, segments, segments), 
+			new THREE.SphereGeometry(radius, segments, segments),
 			new THREE.MeshBasicMaterial({
-				map:  THREE.ImageUtils.loadTexture('images/galaxy_starfield.png'), 
+				map:  THREE.ImageUtils.loadTexture('images/galaxy_starfield.png'),
 				side: THREE.BackSide
 			})
 		);
